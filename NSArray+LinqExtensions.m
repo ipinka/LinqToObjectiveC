@@ -10,7 +10,7 @@
 
 @implementation NSArray (QueryExtension)
 
-- (NSArray *)linq_where:(LINQCondition)predicate
+- (NSArray *)linq_where:(NS_NOESCAPE LINQCondition)predicate
 {
     NSMutableArray* result = [[NSMutableArray alloc] init];
     for(id item in self) {
@@ -21,7 +21,7 @@
     return result;
 }
 
-- (NSArray *)linq_select:(LINQSelector)transform
+- (NSArray *)linq_select:(NS_NOESCAPE LINQSelector)transform
           andStopOnError:(BOOL)shouldStopOnError
 {
     NSMutableArray* result = [[NSMutableArray alloc] initWithCapacity:self.count];
@@ -47,20 +47,20 @@
     return result;
 }
 
-- (NSArray *)linq_select:(LINQSelector)transform
+- (NSArray *)linq_select:(NS_NOESCAPE LINQSelector)transform
 {
     return [self linq_select: transform
               andStopOnError: NO];
 }
 
-- (NSArray*)linq_selectAndStopOnNil:(LINQSelector)transform
+- (NSArray*)linq_selectAndStopOnNil:(NS_NOESCAPE LINQSelector)transform
 {
     return [self linq_select: transform
               andStopOnError: YES];
 }
 
 
-- (NSArray *)linq_sort:(LINQSelector)keySelector
+- (NSArray *)linq_sort:(NS_NOESCAPE LINQSelector)keySelector
 {
     return [self sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         id valueOne = keySelector(obj1);
@@ -75,7 +75,7 @@
     return [self linq_sort:^id(id item) { return item;} ];
 }
 
-- (NSArray *)linq_sortDescending:(LINQSelector)keySelector
+- (NSArray *)linq_sortDescending:(NS_NOESCAPE LINQSelector)keySelector
 {
     return [self sortedArrayUsingComparator:^NSComparisonResult(id obj2, id obj1) {
         id valueOne = keySelector(obj1);
@@ -97,7 +97,7 @@
     }];
 }
 
-- (NSArray *)linq_selectMany:(LINQSelector)transform
+- (NSArray *)linq_selectMany:(NS_NOESCAPE LINQSelector)transform
 {
     NSMutableArray* result = [[NSMutableArray alloc] init];
     for(id item in self) {
@@ -119,7 +119,7 @@
     return distinctSet;
 }
 
-- (NSArray *)linq_distinct:(LINQSelector)keySelector
+- (NSArray *)linq_distinct:(NS_NOESCAPE LINQSelector)keySelector
 {
     NSMutableSet* keyValues = [[NSMutableSet alloc] init];
     NSMutableArray* distinctSet = [[NSMutableArray alloc] init];
@@ -135,7 +135,7 @@
     return distinctSet;
 }
 
-- (id)linq_aggregate:(LINQAccumulator)accumulator
+- (id)linq_aggregate:(NS_NOESCAPE LINQAccumulator)accumulator
 {
     id aggregate = nil;
     for (id item in self) {
@@ -153,7 +153,7 @@
     return self.count == 0 ? nil : [self objectAtIndex:0];
 }
 
-- (id)linq_firstOrNil:(LINQCondition)predicate
+- (id)linq_firstOrNil:(NS_NOESCAPE LINQCondition)predicate
 {
     for(id item in self) {
         if (predicate(item)) {
@@ -185,7 +185,7 @@
     return [self subarrayWithRange:range];
 }
 
-- (BOOL)linq_any:(LINQCondition)condition
+- (BOOL)linq_any:(NS_NOESCAPE LINQCondition)condition
 {
     for (id item in self) {
         if (condition(item)) {
@@ -195,7 +195,7 @@
     return NO;
 }
 
-- (BOOL)linq_all:(LINQCondition)condition
+- (BOOL)linq_all:(NS_NOESCAPE LINQCondition)condition
 {
     for (id item in self) {
         if (!condition(item)) {
@@ -205,7 +205,7 @@
     return YES;
 }
 
-- (NSDictionary*)linq_groupBy:(LINQSelector)groupKeySelector
+- (NSDictionary*)linq_groupBy:(NS_NOESCAPE LINQSelector)groupKeySelector
 {
     NSMutableDictionary* groupedItems = [[NSMutableDictionary alloc] init];
     for (id item in self) {
@@ -222,7 +222,7 @@
     return groupedItems;
 }
 
-- (NSDictionary *)linq_toDictionaryWithKeySelector:(LINQSelector)keySelector valueSelector:(LINQSelector)valueSelector
+- (NSDictionary *)linq_toDictionaryWithKeySelector:(NS_NOESCAPE LINQSelector)keySelector valueSelector:(NS_NOESCAPE LINQSelector)valueSelector
 {
     NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
     for (id item in self) {
@@ -239,12 +239,12 @@
     return result;
 }
 
-- (NSDictionary *)linq_toDictionaryWithKeySelector:(LINQSelector)keySelector
+- (NSDictionary *)linq_toDictionaryWithKeySelector:(NS_NOESCAPE LINQSelector)keySelector
 {
     return [self linq_toDictionaryWithKeySelector:keySelector valueSelector:nil];
 }
 
-- (NSUInteger)linq_count:(LINQCondition)condition
+- (NSUInteger)linq_count:(NS_NOESCAPE LINQCondition)condition
 {
     return [self linq_where:condition].count;
 }

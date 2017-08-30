@@ -10,7 +10,7 @@
 
 @implementation NSDictionary (QueryExtension)
 
-- (NSDictionary *)linq_where:(LINQKeyValueCondition)predicate
+- (NSDictionary *)linq_where:(NS_NOESCAPE LINQKeyValueCondition)predicate
 {
     NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -21,7 +21,7 @@
     return result;
 }
 
-- (NSDictionary *)linq_select:(LINQKeyValueSelector)selector
+- (NSDictionary *)linq_select:(NS_NOESCAPE LINQKeyValueSelector)selector
 {
     NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -34,7 +34,7 @@
     return result;
 }
 
-- (NSArray *)linq_toArray:(LINQKeyValueSelector)selector
+- (NSArray *)linq_toArray:(NS_NOESCAPE LINQKeyValueSelector)selector
 {
     NSMutableArray* result = [[NSMutableArray alloc] init];
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -46,7 +46,7 @@
     return result;
 }
 
-- (BOOL)linq_all:(LINQKeyValueCondition)condition
+- (BOOL)linq_all:(NS_NOESCAPE LINQKeyValueCondition)condition
 {
     __block BOOL all = TRUE;
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -58,7 +58,7 @@
     return all;
 }
 
-- (BOOL)linq_any:(LINQKeyValueCondition)condition
+- (BOOL)linq_any:(NS_NOESCAPE LINQKeyValueCondition)condition
 {
     __block BOOL any = FALSE;
     [self enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
@@ -70,7 +70,7 @@
     return any;
 }
 
-- (NSUInteger)linq_count:(LINQKeyValueCondition)condition
+- (NSUInteger)linq_count:(NS_NOESCAPE LINQKeyValueCondition)condition
 {
     return [self linq_where:condition].count;
 }

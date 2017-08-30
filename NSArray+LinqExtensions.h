@@ -29,21 +29,21 @@ typedef id (^LINQAccumulator)(id item, id aggregate);
 /**
  Various NSArray extensions that provide a Linq-style query API
  */
-@interface NSArray (QueryExtension)
+@interface NSArray<ObjectType> (QueryExtension)
 
 /** Filters a sequence of values based on a predicate.
  
  @param predicate The function to test each source element for a condition.
  @return An array that contains elements from the input sequence that satisfy the condition.
  */
-- (NSArray*) linq_where:(LINQCondition)predicate;
+- (NSArray*) linq_where:(BOOL (NS_NOESCAPE ^)(ObjectType item))predicate;
 
 /** Projects each element of a sequence into a new form.
  
  @param selector A transform function to apply to each element.
  @return An array whose elements are the result of invoking the transform function on each element of source.
  */
-- (NSArray*) linq_select:(LINQSelector)transform;
+- (NSArray*) linq_select:(id (NS_NOESCAPE ^)(ObjectType item))transform;
 
 /** Projects each element of a sequence into a new form. If the transform returns nil for any of the elements,
 the projection fails and returns nil.
@@ -51,122 +51,122 @@ the projection fails and returns nil.
  @param selector A transform function to apply to each element.
  @return An array whose elements are the result of invoking the transform function on each element of source.
  */
-- (NSArray*)linq_selectAndStopOnNil:(LINQSelector)transform;
+- (NSArray*)linq_selectAndStopOnNil:(id (NS_NOESCAPE ^)(ObjectType item))transform;
 
 
 /** Sorts the elements of a sequence in ascending order.
  
  @return An array whose elements are sorted in ascending order.
  */
-- (NSArray*) linq_sort;
+- (NSArray<ObjectType> *) linq_sort;
 
 /** Sorts the elements of a sequence in ascending order by using a specified keySelector.
  
  @param keySelector A selector that provides the 'key' which the array should by sorted by. 
  @return An array whose elements are sorted in ascending order.
  */
-- (NSArray*) linq_sort:(LINQSelector)keySelector;
+- (NSArray<ObjectType> *) linq_sort:(id (NS_NOESCAPE ^)(ObjectType item))keySelector;
 
 /** Sorts the elements of a sequence in descending order.
  
  @return An array whose elements are sorted in descending order.
  */
-- (NSArray *)linq_sortDescending;
+- (NSArray<ObjectType> *)linq_sortDescending;
 
 /** Sorts the elements of a sequence in descending order by using a specified keySelector.
  
  @param keySelector A selector that provides the 'key' which the array should by sorted by.
  @return An array whose elements are sorted in descending order.
  */
-- (NSArray *)linq_sortDescending:(LINQSelector)keySelector;
+- (NSArray<ObjectType> *)linq_sortDescending:(id (NS_NOESCAPE ^)(ObjectType item))keySelector;
 
 /** Filters the elements of an an array based on a specified type.
  
  @param type The type to filter the elements of the sequence on.
  @return An array whose elements are all of the given type.
  */
-- (NSArray*) linq_ofType:(Class)type;
+- (NSArray<ObjectType> *) linq_ofType:(Class)type;
 
 /** Projects each element of a sequence to an NSArray and flattens the resulting sequences into one sequence.
  
  @param transform A transform function to apply to each element, this should return an NSArray.
  @return An array whose elements are the result of invoking the one-to-many transform function on each element of the input sequence.
  */
-- (NSArray*) linq_selectMany:(LINQSelector)transform;
+- (NSArray*) linq_selectMany:(id (NS_NOESCAPE ^)(ObjectType item))transform;
 
 /** Returns distinct elements from a sequence.
  
  @return An array of distinct elements.
  */
-- (NSArray*) linq_distinct;
+- (NSArray<ObjectType> *) linq_distinct;
 
 /** Returns distinct elements from a sequence, where the given selector is used to specify the value to use for equality for each item.
  
  @param keySelector Specifies the value to use for equality for each item.
  @return An array of distinct elements.
  */
-- (NSArray*) linq_distinct:(LINQSelector)keySelector;
+- (NSArray<ObjectType> *) linq_distinct:(id (NS_NOESCAPE ^)(ObjectType item))keySelector;
 
 /** Applies an accumulator function over a sequence. The item in the array is used as the initial aggregate value.
  
  @param accumulator An accumulator function to be invoked on each element.
  @return The final accumulator value.
  */
-- (id) linq_aggregate:(LINQAccumulator)accumulator;
+- (id) linq_aggregate:(id (NS_NOESCAPE ^)(ObjectType item, id aggregate))accumulator;
 
 /** Returns the first item from the source array, or nil if the array is empty.
  
  @return The first item from the source array, or nil if the array is empty.
  */
-- (id) linq_firstOrNil;
+- (ObjectType) linq_firstOrNil;
 
 /** Returns the first item from the source array matching a predicate, or nil if there are no objects passing the test.
  
  @param predicate The function to test each source element for a condition.
  @return An item from the input sequence that satisfy the condition.
  */
-- (id)linq_firstOrNil:(LINQCondition)predicate;
+- (ObjectType)linq_firstOrNil:(BOOL (NS_NOESCAPE ^)(ObjectType item))predicate;
 
 /** Returns the last item from the source array, or nil if the array is empty.
  
  @return The last item from the source array, or nil if the array is empty.
  */
-- (id) linq_lastOrNil;
+- (ObjectType) linq_lastOrNil;
 
 /** Bypasses a specified number of elements in an array and then returns the remaining elements.
  
  @param count The number of elements to bypass.
  @return An array that contains the elements that occur after the specified index in the input array.
  */
-- (NSArray*) linq_skip:(NSUInteger)count;
+- (NSArray<ObjectType> *) linq_skip:(NSUInteger)count;
 
 /** Returns a specified number of contiguous elements from the start of an array.
  
  @param count The number of elements to take.
  @return An array that contains the specified number of elements from the start of the input array.
  */
-- (NSArray*) linq_take:(NSUInteger)count;
+- (NSArray<ObjectType> *) linq_take:(NSUInteger)count;
 
 /** Determines whether all the elements of the array satisfies a condition.
  
  @param condition The condition to test elements against.
  @return Whether all the elements of the array satisfies a condition.
  */
-- (BOOL) linq_all:(LINQCondition)condition;
+- (BOOL) linq_all:(BOOL (NS_NOESCAPE ^)(ObjectType item))condition;
 
 /** Determines whether any of the elements of the array satisfies a condition.
  
  @param condition The condition to test elements against.
  @return Whether any of the elements of the array satisfies a condition.
  */
-- (BOOL) linq_any:(LINQCondition)condition;
+- (BOOL) linq_any:(BOOL (NS_NOESCAPE ^)(ObjectType item))condition;
 
 /** Groups the elements of the array by keys provided by the given key selector. The returned dictionary will contain the keys that are the result of applying the key selector function to each item of the array, and the value for each key is an array of all the items that return the same key value.
  
  @param groupKeySelector Determines the group key for each item in the array
  @return A dictionary that groups the items via the given key selector.
  */
-- (NSDictionary*) linq_groupBy:(LINQSelector)groupKeySelector;
+- (NSDictionary<id, NSArray<ObjectType> *> *) linq_groupBy:(id (NS_NOESCAPE ^)(ObjectType item))groupKeySelector;
 
 /** Transforms the source array into a dictionary by applying the given keySelector and valueSelector to each item in the array.
  
@@ -174,21 +174,21 @@ the projection fails and returns nil.
  @param valueSelector A selector function that is applied to each item to determine the value it will have within the returned dictionary.
  @return A dictionary that is the result of applying the supplied selector functions to each item of the array.
  */
-- (NSDictionary*) linq_toDictionaryWithKeySelector:(LINQSelector)keySelector valueSelector:(LINQSelector)valueSelector;
+- (NSDictionary*) linq_toDictionaryWithKeySelector:(id (NS_NOESCAPE ^)(ObjectType item))keySelector valueSelector:(id (NS_NOESCAPE ^)(ObjectType item))valueSelector;
 
 /** Transforms the source array into a dictionary by applying the given keySelectorto each item in the array.
  
  @param keySelector A selector function that is applied to each item to determine the key it will have within the returned dictionary.
  @return A dictionary that is the result of applying the supplied selector functions to each item of the array.
  */
-- (NSDictionary*) linq_toDictionaryWithKeySelector:(LINQSelector)keySelector;
+- (NSDictionary<id, ObjectType> *) linq_toDictionaryWithKeySelector:(id (NS_NOESCAPE ^)(ObjectType item))keySelector;
 
 /** Counts the number of elements in the array that satisfy the given condition.
  
  @param condition The condition to test elements against.
  @return The number of elements that satisfy the condition.
  */
-- (NSUInteger) linq_count:(LINQCondition)condition;
+- (NSUInteger) linq_count:(BOOL (NS_NOESCAPE ^)(ObjectType item))condition;
 
 /** Concatonates the given array to the end of this array.
  
@@ -201,7 +201,7 @@ the projection fails and returns nil.
  
  @return The reversed array.
  */
-- (NSArray*) linq_reverse;
+- (NSArray<ObjectType> *) linq_reverse;
 
 /** Sums the elements in the array.
  
